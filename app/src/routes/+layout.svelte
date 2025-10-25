@@ -17,6 +17,7 @@
 	import { Capacitor } from "@capacitor/core";
 	import { StatusBar, Style } from "@capacitor/status-bar";
 	import { App } from "@capacitor/app";
+	import { TokenManager } from "$lib/token_manager";
 
 	import {
 		toastStore,
@@ -46,6 +47,7 @@
 	const animatedRoutes = ["simplewrite", "joboffer", "faq", "auth/manage"];
 
 	onMount(async () => {
+
 		// -------------- 앱 관련
 		if (Capacitor.getPlatform() === "android") {
 			let lastBack = 0;
@@ -99,9 +101,8 @@
 			$page.url.pathname.includes(item),
 		);
 	});
-
-	$effect(() => {
-		console.log();
+	
+	$effect(async () => {
 	});
 </script>
 

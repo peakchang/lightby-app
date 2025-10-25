@@ -327,6 +327,13 @@
 
     <MainLocation></MainLocation>
 
+
+    <button on:click={() => {
+        goto('/test1')
+    }}>
+        gotest
+    </button>
+
     <!-- 프리미엄 영역 -->
     {#if $main_list["premium"].length > 0}
         <div class="premium-area mt-5">

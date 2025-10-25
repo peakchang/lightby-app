@@ -6,6 +6,7 @@
     import { onMount, tick } from "svelte";
     import axios from "axios";
     import { back_api } from "$lib/const";
+    import { TokenManager } from "$lib/token_manager";
 
     let id = $state("");
     let password = $state("");
@@ -35,12 +36,27 @@
         const movePath = $page.url.searchParams.get("path");
 
         let errorMessage = "";
-
+        let userInfo = {};
         try {
-            const res = await axios.post(`/auth/login`, {
+            const getUserRes = await axios.post(`${back_api}/auth/app_login`, {
                 id,
                 password,
             });
+
+            userInfo = getUserRes.data.userInfo;
+
+            const tokens = new TokenManager();
+
+            await tokens.setToken(
+                "refresh_token",
+                getUserRes.data.refreshToken,
+                Date.now() + 1000 * 60 * 60 * 24 * 14,
+            );
+            await tokens.setToken(
+                "access_token",
+                getUserRes.data.accessToken,
+                Date.now() + 1000 * 5,
+            );
 
             successMessage = "로그인 완료! 잠시후 메인으로 이동합니다.";
             successModal = true;
@@ -50,16 +66,22 @@
                 successModal = false;
                 modalLoading = false;
                 if (movePath) {
-                    location.href = movePath;
+                    goto(movePath);
                 } else {
-                    location.href = "/";
+                    goto("/", { invalidateAll: true });
                 }
             }, random);
         } catch (err) {
-            const m = err.response.data.message;
+            try {
+                console.error(err);
 
-            alertModal = true;
-            alertMessage = `${m ? m : ""} 다시 시도해주세요.`;
+                // const m = err.response.data.message;
+
+                // alertModal = true;
+                // alertMessage = `${m ? m : ""} 다시 시도해주세요.`;
+            } catch (error) {
+                console.error(error.message);
+            }
         }
     }
 

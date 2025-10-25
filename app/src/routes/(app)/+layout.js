@@ -7,7 +7,6 @@ import { browser } from "$app/environment";
 // 사이트 접속시 user_info store 값에 user 정보 넣기
 export const load = async ({ params, url, data }) => {
 
-
     let todayCount = 0
     let newSiteCount = 0
     let baseEnv = {} // 배너 리스트 불러오기 위해서!

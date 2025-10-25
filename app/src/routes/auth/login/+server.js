@@ -1,6 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
-import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from '$env/static/private';
+import { ACCESS_TOKEN_SECRET, LOGONSERVER, REFRESH_TOKEN_SECRET } from '$env/static/private';
+import { TokenManager } from '$lib/token_manager';
 import bcrypt from 'bcrypt';
 import moment from "moment-timezone";
 import axios from "axios";
@@ -42,6 +43,11 @@ export async function POST({ request, cookies }) {
             const accessToken = jwt.sign(accessPayload, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
             const refreshToken = jwt.sign(refreshPayload, REFRESH_TOKEN_SECRET, { expiresIn: '14d' });
 
+            console.log(accessToken);
+            console.log(refreshToken);
+            
+            
+
             // 리프레쉬 토큰 / 마지막 접속 시간 업데이트
 
             try {
@@ -53,30 +59,19 @@ export async function POST({ request, cookies }) {
                 return json({ message: error.response.data.message }, { status: 400 })
             }
 
-            cookies.set('access_token', accessToken, {
-                httpOnly: true,
-                secure: true,
-                path: '/',
-                sameSite: 'none',
-                // maxAge: 60 * 15
-                maxAge: 5
-            });
-
-            cookies.set('refresh_token', refreshToken, {
-                httpOnly: true,
-                secure: true,
-                path: '/',
-                sameSite: 'none',
-                maxAge: 60 * 60 * 24 * 14
-            });
-
-            console.log(cookies);
+            const tokens = new TokenManager();
 
 
+            await tokens.setToken('access_token', refreshToken, Date.now() + 1000 * 60 * 60 * 24 * 14)
+            await tokens.setToken('access_token', accessToken, Date.now() + 1000 * 5)
+
+            
         } else {
             return json({ message: '비밀번호가 일치하지 않습니다.' }, { status: 400 })
         }
     } catch (error) {
+        console.log('여기 에러임?!');
+        
         console.error(error.message);
 
     }
