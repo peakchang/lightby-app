@@ -1,3 +1,6 @@
+export const ssr = false;
+export const prerender = true;
+
 import { back_api, public_img_bucket } from "$lib/const.js";
 import { user_info } from "$lib/stores/stores.js";
 import { main_location, search_val } from "$lib/stores/stores.js";

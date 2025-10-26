@@ -9,6 +9,8 @@
     import { TokenManager } from "$lib/token_manager";
     import { loginWithKakao } from "$lib/auth/kakao";
 
+    import { SsgoiTransition } from "@ssgoi/svelte";
+
     let id = $state("");
     let password = $state("");
 
@@ -85,7 +87,30 @@
     }
 
     async function kakao_login() {
-        await loginWithKakao().catch(alert);
+        try {
+            const kakaoData = await loginWithKakao();
+
+            if (kakaoData.loginStatus) {
+                successMessage = "메인으로 이동중입니다.";
+                successModal = true;
+                modalLoading = true;
+                setTimeout(() => {
+                    successModal = false;
+                    modalLoading = false;
+                    location.href = "/";
+                }, 1500);
+            } else {
+                goto("/auth/kakao", {
+                    state: {
+                        data: kakaoData,
+                    },
+                });
+            }
+        } catch (err) {
+            const m = err.response.data.message;
+            alertModal = true;
+            alertMessage = `${m ? m : ""} 다시 시도해주세요.`;
+        }
     }
     // const kakao_login = () => {
     //     const kakaoInfo = {
@@ -125,79 +150,94 @@
     </div>
 </CustomModal>
 
-<!-- svelte-ignore event_directive_deprecated -->
-<div class="bg-green-50 relative min-h-screen suit-font">
-    <div class="max-w-[530px] mx-auto pt-12 pb-10 bg-white p-14 min-h-screen">
-        <div class="text-center bg-white">
-            <a href="/">
-                <img src="/logo.png" alt="" class=" max-w-[150px] mx-auto" />
-            </a>
-        </div>
-
-        <div class="mt-12">
-            <form on:submit={loginSubmit}>
-                <label class="input input-info mt-5 w-full bg-white">
-                    <span class="min-w-4 flex justify-center">
-                        <i class="fa fa-id-card-o opacity-70" aria-hidden="true"
-                        ></i>
-                    </span>
-
-                    <input
-                        type="text"
-                        class="grow"
-                        placeholder="아이디를 입력하세요"
-                        bind:value={id}
+<SsgoiTransition id="/auth/login">
+    <!-- svelte-ignore event_directive_deprecated -->
+    <div class="bg-green-50 relative min-h-screen suit-font">
+        <div
+            class="max-w-[530px] mx-auto pt-12 pb-10 bg-white p-14 min-h-screen"
+        >
+            <div class="text-center bg-white">
+                <a href="/">
+                    <img
+                        src="/logo.png"
+                        alt=""
+                        class=" max-w-[150px] mx-auto"
                     />
-                </label>
-
-                <label class="input input-info mt-5 w-full bg-white">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 16 16"
-                        fill="currentColor"
-                        class="h-4 w-4 opacity-70"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-                            clip-rule="evenodd"
-                        />
-                    </svg>
-                    <input
-                        type="password"
-                        class="grow"
-                        placeholder="비밀번호를 입력하세요"
-                        bind:value={password}
-                    />
-                </label>
-
-                <div class="mt-5">
-                    <button class="btn btn-info w-full text-white">
-                        로그인하기
-                    </button>
-                </div>
-            </form>
-
-            <div class="mt-3">
-                <button
-                    class=" bg-[#ffe500] font-semibold w-full p-3 rounded-lg flex justify-center items-center gap-2 cursor-pointer"
-                    on:click={kakao_login}
-                >
-                    <img src="/kakao_logo.png" alt="" width="24" height="24" />
-                    카카오 간편 로그인
-                </button>
+                </a>
             </div>
 
-            <div class="mt-3 text-center">
-                <button
-                    class="btn btn-success text-white w-full"
-                    on:click={() => {
-                        goto("/auth/join");
-                    }}
-                >
-                    회원이 아니신가요? 회원가입 바로가기
-                </button>
+            <div class="mt-12">
+                <form on:submit={loginSubmit}>
+                    <label class="input input-info mt-5 w-full bg-white">
+                        <span class="min-w-4 flex justify-center">
+                            <i
+                                class="fa fa-id-card-o opacity-70"
+                                aria-hidden="true"
+                            ></i>
+                        </span>
+
+                        <input
+                            type="text"
+                            class="grow"
+                            placeholder="아이디를 입력하세요"
+                            bind:value={id}
+                        />
+                    </label>
+
+                    <label class="input input-info mt-5 w-full bg-white">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 16 16"
+                            fill="currentColor"
+                            class="h-4 w-4 opacity-70"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                        <input
+                            type="password"
+                            class="grow"
+                            placeholder="비밀번호를 입력하세요"
+                            bind:value={password}
+                        />
+                    </label>
+
+                    <div class="mt-5">
+                        <button class="btn btn-info w-full text-white">
+                            로그인하기
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-3">
+                    <button
+                        class=" bg-[#ffe500] font-semibold w-full p-3 rounded-lg flex justify-center items-center gap-2 cursor-pointer"
+                        on:click={kakao_login}
+                    >
+                        <img
+                            src="/kakao_logo.png"
+                            alt=""
+                            width="24"
+                            height="24"
+                        />
+                        카카오 간편 로그인
+                    </button>
+                </div>
+
+                <div class="mt-3 text-center">
+                    <button
+                        class="btn btn-success text-white w-full"
+                        on:click={() => {
+                            goto("/auth/join");
+                        }}
+                    >
+                        회원이 아니신가요? 회원가입 바로가기
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</SsgoiTransition>

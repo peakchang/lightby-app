@@ -15,6 +15,8 @@
     import axios from "axios";
     import { onMount } from "svelte";
 
+    import { SsgoiTransition } from "@ssgoi/svelte";
+
     onMount(() => {
         if ($user_info["idx"]) {
             alertMessage = "이미 로그인 되어 있습니다.";
@@ -347,239 +349,251 @@
     </div>
 </CustomModal>
 
-<div class="bg-green-50 relative min-h-screen suit-font">
-    <div class="max-w-[530px] mx-auto pt-12 pb-10 bg-white p-14 min-h-screen">
-        <div class="text-center bg-white">
-            <a href="/">
-                <img src="/logo.png" alt="" class=" max-w-[150px] mx-auto" />
-            </a>
-
-            <div class="mt-5 mb-1 text-2xl font-bold">회원가입</div>
-        </div>
-
-        <div class="">
-            <!-- svelte-ignore event_directive_deprecated -->
-            <form on:submit={joinSubmit}>
-                <label class="input input-info mt-5 w-full bg-white">
-                    <span class="min-w-4 flex justify-center">
-                        <i class="fa fa-id-card-o opacity-70" aria-hidden="true"
-                        ></i>
-                    </span>
-
-                    <!-- svelte-ignore event_directive_deprecated -->
-                    <input
-                        type="text"
-                        class="grow"
-                        placeholder="아이디를 입력하세요"
-                        data-type="id"
-                        bind:value={id}
-                        on:focusin={() => {
-                            idErrBool = false;
-                            idSuccessBool = false;
-                        }}
-                        on:focusout={duplicate_chk}
+<SsgoiTransition id="/auth/join">
+    <div class="bg-green-50 relative min-h-screen">
+        <div
+            class="max-w-[530px] mx-auto pt-12 pb-10 bg-white p-14 min-h-screen"
+        >
+            <div class="text-center bg-white">
+                <a href="/">
+                    <img
+                        src="/logo.png"
+                        alt=""
+                        class=" max-w-[150px] mx-auto"
                     />
-                </label>
-                {#if idStatusErrBool == true}
-                    <div class="text-right text-xs text-red-500 mt-1">
-                        아이디 형식이 잘못되었습니다. 영어 / 숫자만 사용
-                        가능합니다.
-                    </div>
-                {:else if idErrBool == true}
-                    <div class="text-right text-xs text-red-500 mt-1">
-                        아이디가 중복됩니다. 다시 입력해주세요.
-                    </div>
-                {:else if idSuccessBool == true}
-                    <div class="text-right text-xs text-green-600 mt-1">
-                        사용 가능한 아이디 입니다.
-                    </div>
-                {/if}
+                </a>
 
-                <label class="input input-info mt-5 w-full bg-white">
-                    <span class="min-w-4 flex justify-center">
-                        <i class="fa fa-user opacity-70" aria-hidden="true"></i>
-                    </span>
-                    <input
-                        type="text"
-                        class="grow"
-                        placeholder="이름(실명)을 입력하세요"
-                        bind:value={name}
-                    />
-                </label>
+                <div class="mt-5 mb-1 text-2xl font-bold">회원가입</div>
+            </div>
 
-                <label class="input input-info mt-5 w-full bg-white">
-                    <span class="min-w-4 flex justify-center">
-                        <i
-                            class="fa fa-user-circle opacity-70"
-                            aria-hidden="true"
-                        ></i>
-                    </span>
-
-                    <!-- svelte-ignore event_directive_deprecated -->
-                    <input
-                        type="text"
-                        class="grow"
-                        placeholder="활동하실 닉네임을 입력하세요"
-                        data-type="nickname"
-                        bind:value={nickname}
-                        on:focusin={() => {
-                            nicknameErrBool = false;
-                            nicknameSuccessBool = false;
-                        }}
-                        on:focusout={duplicate_chk}
-                    />
-                </label>
-                {#if nicknameErrBool == true}
-                    <div class="text-right text-xs text-red-500 mt-1">
-                        닉네임이 중복됩니다. 다시 입력해주세요.
-                    </div>
-                {:else if nicknameSuccessBool == true}
-                    <div class="text-right text-xs text-green-600 mt-1">
-                        사용 가능한 닉네임 입니다.
-                    </div>
-                {/if}
-
-                <div class="flex items-center mt-5 gap-2">
-                    <label class="input input-info w-full bg-white">
+            <div class="">
+                <!-- svelte-ignore event_directive_deprecated -->
+                <form on:submit={joinSubmit}>
+                    <label class="input input-info mt-5 w-full bg-white">
                         <span class="min-w-4 flex justify-center">
                             <i
-                                class="fa fa-mobile text-lg opacity-70"
+                                class="fa fa-id-card-o opacity-70"
                                 aria-hidden="true"
                             ></i>
                         </span>
 
+                        <!-- svelte-ignore event_directive_deprecated -->
                         <input
                             type="text"
                             class="grow"
-                            placeholder="휴대폰 번호를 입력하세요"
-                            disabled={authShowBool || authBool}
-                            bind:value={phone}
-                            on:input={formatPhoneNumber}
+                            placeholder="아이디를 입력하세요"
+                            data-type="id"
+                            bind:value={id}
+                            on:focusin={() => {
+                                idErrBool = false;
+                                idSuccessBool = false;
+                            }}
+                            on:focusout={duplicate_chk}
                         />
-                        <!-- disabled -->
+                    </label>
+                    {#if idStatusErrBool == true}
+                        <div class="text-right text-xs text-red-500 mt-1">
+                            아이디 형식이 잘못되었습니다. 영어 / 숫자만 사용
+                            가능합니다.
+                        </div>
+                    {:else if idErrBool == true}
+                        <div class="text-right text-xs text-red-500 mt-1">
+                            아이디가 중복됩니다. 다시 입력해주세요.
+                        </div>
+                    {:else if idSuccessBool == true}
+                        <div class="text-right text-xs text-green-600 mt-1">
+                            사용 가능한 아이디 입니다.
+                        </div>
+                    {/if}
+
+                    <label class="input input-info mt-5 w-full bg-white">
+                        <span class="min-w-4 flex justify-center">
+                            <i class="fa fa-user opacity-70" aria-hidden="true"
+                            ></i>
+                        </span>
+                        <input
+                            type="text"
+                            class="grow"
+                            placeholder="이름(실명)을 입력하세요"
+                            bind:value={name}
+                        />
                     </label>
 
-                    <button
-                        type="button"
-                        data-type="phone"
-                        class="btn btn-success text-white"
-                        disabled={authShowBool || authBool}
-                        on:click={async (e) => {
-                            const phoneBool = await duplicate_chk(e);
+                    <label class="input input-info mt-5 w-full bg-white">
+                        <span class="min-w-4 flex justify-center">
+                            <i
+                                class="fa fa-user-circle opacity-70"
+                                aria-hidden="true"
+                            ></i>
+                        </span>
 
-                            if (phoneBool) {
-                                startAuth();
-                            }
-                        }}
-                    >
-                        인증받기
-                    </button>
-                </div>
+                        <!-- svelte-ignore event_directive_deprecated -->
+                        <input
+                            type="text"
+                            class="grow"
+                            placeholder="활동하실 닉네임을 입력하세요"
+                            data-type="nickname"
+                            bind:value={nickname}
+                            on:focusin={() => {
+                                nicknameErrBool = false;
+                                nicknameSuccessBool = false;
+                            }}
+                            on:focusout={duplicate_chk}
+                        />
+                    </label>
+                    {#if nicknameErrBool == true}
+                        <div class="text-right text-xs text-red-500 mt-1">
+                            닉네임이 중복됩니다. 다시 입력해주세요.
+                        </div>
+                    {:else if nicknameSuccessBool == true}
+                        <div class="text-right text-xs text-green-600 mt-1">
+                            사용 가능한 닉네임 입니다.
+                        </div>
+                    {/if}
 
-                {#if authShowBool}
-                    <div class="flex items-center mt-1.5 gap-2">
+                    <div class="flex items-center mt-5 gap-2">
                         <label class="input input-info w-full bg-white">
-                            <span
-                                class="min-w-4 flex justify-center text-red-400"
-                            >
-                                {formatTime(timeLeft)}
+                            <span class="min-w-4 flex justify-center">
+                                <i
+                                    class="fa fa-mobile text-lg opacity-70"
+                                    aria-hidden="true"
+                                ></i>
                             </span>
 
                             <input
                                 type="text"
                                 class="grow"
-                                placeholder="인증번호를 입력하세요"
-                                bind:value={authNumChk}
+                                placeholder="휴대폰 번호를 입력하세요"
+                                disabled={authShowBool || authBool}
+                                bind:value={phone}
+                                on:input={formatPhoneNumber}
                             />
+                            <!-- disabled -->
                         </label>
 
                         <button
                             type="button"
-                            class="btn btn-warning text-white"
-                            on:click={checkAuthStop}
+                            data-type="phone"
+                            class="btn btn-success text-white"
+                            disabled={authShowBool || authBool}
+                            on:click={async (e) => {
+                                const phoneBool = await duplicate_chk(e);
+
+                                if (phoneBool) {
+                                    startAuth();
+                                }
+                            }}
                         >
-                            인증확인
+                            인증받기
                         </button>
                     </div>
-                {/if}
 
-                <label class="input input-info mt-5 w-full bg-white">
-                    <span class="min-w-4 flex justify-center">
-                        <i class="fa fa-user opacity-70" aria-hidden="true"></i>
-                    </span>
-                    <input
-                        type="text"
-                        class="grow"
-                        placeholder="사업자 번호를 입력하세요"
-                        bind:value={businessNum}
-                    />
-                </label>
-                <div class="pl-1 text-xs mt-1 text-blue-500">
-                    <p>(선택) 사업자 번호가 있으실 경우 입력 해 주세요.</p>
-                </div>
+                    {#if authShowBool}
+                        <div class="flex items-center mt-1.5 gap-2">
+                            <label class="input input-info w-full bg-white">
+                                <span
+                                    class="min-w-4 flex justify-center text-red-400"
+                                >
+                                    {formatTime(timeLeft)}
+                                </span>
 
-                <label class="input input-info mt-5 w-full bg-white">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 16 16"
-                        fill="currentColor"
-                        class="h-4 w-4 opacity-70"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-                            clip-rule="evenodd"
+                                <input
+                                    type="text"
+                                    class="grow"
+                                    placeholder="인증번호를 입력하세요"
+                                    bind:value={authNumChk}
+                                />
+                            </label>
+
+                            <button
+                                type="button"
+                                class="btn btn-warning text-white"
+                                on:click={checkAuthStop}
+                            >
+                                인증확인
+                            </button>
+                        </div>
+                    {/if}
+
+                    <label class="input input-info mt-5 w-full bg-white">
+                        <span class="min-w-4 flex justify-center">
+                            <i class="fa fa-user opacity-70" aria-hidden="true"
+                            ></i>
+                        </span>
+                        <input
+                            type="text"
+                            class="grow"
+                            placeholder="사업자 번호를 입력하세요"
+                            bind:value={businessNum}
                         />
-                    </svg>
-                    <input
-                        type="password"
-                        class="grow"
-                        placeholder="비밀번호를 입력하세요"
-                        bind:value={password}
-                        on:focusout={chkPwdFunc}
-                    />
-                </label>
+                    </label>
+                    <div class="pl-1 text-xs mt-1 text-blue-500">
+                        <p>(선택) 사업자 번호가 있으실 경우 입력 해 주세요.</p>
+                    </div>
 
-                <label class="input input-info mt-5 w-full bg-white">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 16 16"
-                        fill="currentColor"
-                        class="h-4 w-4 opacity-70"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-                            clip-rule="evenodd"
+                    <label class="input input-info mt-5 w-full bg-white">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 16 16"
+                            fill="currentColor"
+                            class="h-4 w-4 opacity-70"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                        <input
+                            type="password"
+                            class="grow"
+                            placeholder="비밀번호를 입력하세요"
+                            bind:value={password}
+                            on:focusout={chkPwdFunc}
                         />
-                    </svg>
-                    <input
-                        type="password"
-                        class="grow"
-                        placeholder="비밀번호 확인"
-                        bind:value={passwordChk}
-                        on:focusout={chkPwdFunc}
-                    />
-                </label>
-                {#if pwdErrShowBool == true}
-                    <div class="text-right text-xs text-red-500 mt-1">
-                        비밀번호 확인이 일치하지 않습니다. 다시 시도해주세요
-                    </div>
-                {:else if pwdSuccessShowBool == true}
-                    <div class="text-right text-xs text-green-600 mt-1">
-                        비밀번호 확인이 일치합니다.
-                    </div>
-                {/if}
+                    </label>
 
-                <div class="mt-5">
-                    <button class="btn btn-info btn-lg w-full text-white">
-                        가입하기
-                    </button>
-                </div>
-            </form>
+                    <label class="input input-info mt-5 w-full bg-white">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 16 16"
+                            fill="currentColor"
+                            class="h-4 w-4 opacity-70"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                        <input
+                            type="password"
+                            class="grow"
+                            placeholder="비밀번호 확인"
+                            bind:value={passwordChk}
+                            on:focusout={chkPwdFunc}
+                        />
+                    </label>
+                    {#if pwdErrShowBool == true}
+                        <div class="text-right text-xs text-red-500 mt-1">
+                            비밀번호 확인이 일치하지 않습니다. 다시 시도해주세요
+                        </div>
+                    {:else if pwdSuccessShowBool == true}
+                        <div class="text-right text-xs text-green-600 mt-1">
+                            비밀번호 확인이 일치합니다.
+                        </div>
+                    {/if}
+
+                    <div class="mt-5">
+                        <button class="btn btn-info btn-lg w-full text-white">
+                            가입하기
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+</SsgoiTransition>
 
 <style>
 </style>

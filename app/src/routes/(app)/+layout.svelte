@@ -69,6 +69,7 @@
         $main_location = "전국";
         sessionStorage.removeItem("location");
         sessionStorage.removeItem("search_val");
+        // location.href = "/";
         goto("/", { invalidateAll: true });
     }
 

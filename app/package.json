@@ -27,6 +27,7 @@
 		"@capacitor/cli": "^7.4.4",
 		"@capacitor/core": "^7.4.4",
 		"@capacitor/status-bar": "^7.0.3",
+		"@ssgoi/svelte": "^2.3.0",
 		"axios": "^1.12.2",
 		"bcrypt": "^6.0.0",
 		"browser-image-compression": "^2.0.2",

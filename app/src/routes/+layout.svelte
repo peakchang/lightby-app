@@ -19,6 +19,10 @@
 	import { App } from "@capacitor/app";
 	import { TokenManager } from "$lib/token_manager";
 
+	import { Ssgoi } from "@ssgoi/svelte";
+	import { fade } from "@ssgoi/svelte/view-transitions";
+	import { slide } from "@ssgoi/svelte/view-transitions";
+
 	import {
 		toastStore,
 		viewLimitAlertModal,
@@ -46,8 +50,30 @@
 
 	const animatedRoutes = ["simplewrite", "joboffer", "faq", "auth/manage"];
 
-	onMount(async () => {
+	const ssgoiConfig = {
+		transitions: [
+			{
+				from: "/auth/login",
+				to: "/auth/join",
+				transition: fade(),
+				symmetric: true, // 뒤로가기 시 자동으로 right
+			},
+			{
+				from: "/auth/join",
+				to: "/auth/interest_set",
+				transition: slide({ direction: "left" }),
+				symmetric: true,
+			},
+			{
+				from: "/auth/interest_set",
+				to: "/mytalent",
+				transition: slide({ direction: "left" }),
+				symmetric: true,
+			},
+		],
+	};
 
+	onMount(async () => {
 		// -------------- 앱 관련
 		if (Capacitor.getPlatform() === "android") {
 			let lastBack = 0;
@@ -101,9 +127,8 @@
 			$page.url.pathname.includes(item),
 		);
 	});
-	
-	$effect(async () => {
-	});
+
+	$effect(async () => {});
 </script>
 
 <svelte:head>
@@ -175,9 +200,11 @@
 					{@render children()}
 				</div>
 			{:else}
-				<div>
-					{@render children()}
-				</div>
+				<Ssgoi config={ssgoiConfig}>
+					<div>
+						{@render children()}
+					</div>
+				</Ssgoi>
 			{/if}
 		{/key}
 	</div>

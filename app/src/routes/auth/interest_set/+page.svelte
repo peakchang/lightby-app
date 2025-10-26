@@ -12,6 +12,8 @@
     import { goto } from "$app/navigation";
     import { browser } from "$app/environment";
 
+    import { SsgoiTransition } from "@ssgoi/svelte";
+
     // 관심 정보
     let location = $state([]);
     let business = $state([]);
@@ -112,132 +114,143 @@
     </div>
 </CustomModal>
 
-<!-- svelte-ignore a11y_click_events_have_key_events -->
-<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-<!-- svelte-ignore event_directive_deprecated -->
-<div class="pt-10 pb-10 px-10 paperlogy">
-    <div class="text-center mt-5 mb-10 text-lg font-bold">
-        <p>아래 정보를 선택하시고</p>
-        <p>회원님만을 위한 맞춤 알림을 받아보세요✨</p>
-        <p>새로운 현장이나 조건이 바뀌면,</p>
-        <p>가장 먼저 알려드릴게요!</p>
-    </div>
-    <div class="my-3">
-        <p>🌍 근무 가능한 지역은 어디인가요?</p>
-        <p class="text-sm ml-7">내 주변 현장이 뜰 때 바로 알려드려요 💌</p>
-    </div>
+<SsgoiTransition id="/auth/interest_set">
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+    <!-- svelte-ignore event_directive_deprecated -->
+    <div class="pt-10 pb-10 px-10 paperlogy">
+        <div class="text-center mt-5 mb-10 text-lg font-bold">
+            <p>아래 정보를 선택하시고</p>
+            <p>회원님만을 위한 맞춤 알림을 받아보세요✨</p>
+            <p>새로운 현장이나 조건이 바뀌면,</p>
+            <p>가장 먼저 알려드릴게요!</p>
+        </div>
+        <div class="my-3">
+            <p>🌍 근무 가능한 지역은 어디인가요?</p>
+            <p class="text-sm ml-7">내 주변 현장이 뜰 때 바로 알려드려요 💌</p>
+        </div>
 
-    <div></div>
-    <div class="grid grid-cols-2 gap-1">
-        {#each regions as region, idx}
-            <label
-                class="button-checkbox"
-                class:disabled={location.length === 1 &&
-                    location.includes(region)}
-                on:click={(e) => {
-                    if (location.length === 1 && location.includes(region)) {
-                        toastStore.set({
-                            show: true,
-                            message:
-                                "근무지역은 최소 1개 이상 선택 되어야 합니다.",
-                            color: "#CC3D3D",
-                        });
-                    }
-                }}
-            >
-                <input
-                    type="checkbox"
-                    hidden
-                    value={region}
-                    bind:group={location}
-                    disabled={location.length === 1 &&
+        <div></div>
+        <div class="grid grid-cols-2 gap-1">
+            {#each regions as region, idx}
+                <label
+                    class="button-checkbox"
+                    class:disabled={location.length === 1 &&
                         location.includes(region)}
-                />
-                <div>{region}</div>
-            </label>
-        {/each}
-    </div>
+                    on:click={(e) => {
+                        if (
+                            location.length === 1 &&
+                            location.includes(region)
+                        ) {
+                            toastStore.set({
+                                show: true,
+                                message:
+                                    "근무지역은 최소 1개 이상 선택 되어야 합니다.",
+                                color: "#CC3D3D",
+                            });
+                        }
+                    }}
+                >
+                    <input
+                        type="checkbox"
+                        hidden
+                        value={region}
+                        bind:group={location}
+                        disabled={location.length === 1 &&
+                            location.includes(region)}
+                    />
+                    <div>{region}</div>
+                </label>
+            {/each}
+        </div>
 
-    <div class="my-3">
-        <p>🏢 관심있는 업종을 선택 해 주세요.</p>
-        <p class="text-sm ml-7">
-            내 취향에 맞는 현장만 쏙쏙 추천해 드릴게요 🎯
-        </p>
-    </div>
-    <div class="grid grid-cols-2 gap-1">
-        {#each businessCategorys as val, idx}
-            <label
-                class="button-checkbox"
-                class:disabled={business.length === 1 && business.includes(val)}
-                on:click={(e) => {
-                    if (business.length === 1 && business.includes(val)) {
-                        toastStore.set({
-                            show: true,
-                            message:
-                                "관심업종은 최소 1개 이상 선택 되어야 합니다.",
-                            color: "#CC3D3D",
-                        });
-                    }
-                }}
-            >
-                <input
-                    type="checkbox"
-                    hidden
-                    value={val}
-                    bind:group={business}
-                    disabled={business.length === 1 && business.includes(val)}
-                />
-                <div>{val}</div>
-            </label>
-        {/each}
-    </div>
+        <div class="my-3">
+            <p>🏢 관심있는 업종을 선택 해 주세요.</p>
+            <p class="text-sm ml-7">
+                내 취향에 맞는 현장만 쏙쏙 추천해 드릴게요 🎯
+            </p>
+        </div>
+        <div class="grid grid-cols-2 gap-1">
+            {#each businessCategorys as val, idx}
+                <label
+                    class="button-checkbox"
+                    class:disabled={business.length === 1 &&
+                        business.includes(val)}
+                    on:click={(e) => {
+                        if (business.length === 1 && business.includes(val)) {
+                            toastStore.set({
+                                show: true,
+                                message:
+                                    "관심업종은 최소 1개 이상 선택 되어야 합니다.",
+                                color: "#CC3D3D",
+                            });
+                        }
+                    }}
+                >
+                    <input
+                        type="checkbox"
+                        hidden
+                        value={val}
+                        bind:group={business}
+                        disabled={business.length === 1 &&
+                            business.includes(val)}
+                    />
+                    <div>{val}</div>
+                </label>
+            {/each}
+        </div>
 
-    <div class="my-3">
-        <p>💼 지금 회원님의 역할은 무엇인가요?</p>
-        <p class="text-sm ml-7">
-            한 단계 높은 직종까지 살짝 욕심내면, 더 많은 기회가 찾아올 거예요🌱
-        </p>
-    </div>
-    <div class="grid grid-cols-2 gap-1">
-        {#each jobCategorys as job, idx}
-            <label
-                class="button-checkbox"
-                class:disabled={occupation.length === 1 &&
-                    occupation.includes(job)}
-                on:click={(e) => {
-                    if (occupation.length === 1 && occupation.includes(job)) {
-                        toastStore.set({
-                            show: true,
-                            message:
-                                "관심직종은 최소 1개 이상 선택 되어야 합니다.",
-                            color: "#CC3D3D",
-                        });
-                    }
-                }}
-            >
-                <input
-                    type="checkbox"
-                    hidden
-                    value={job}
-                    bind:group={occupation}
-                    disabled={occupation.length === 1 &&
+        <div class="my-3">
+            <p>💼 지금 회원님의 역할은 무엇인가요?</p>
+            <p class="text-sm ml-7">
+                한 단계 높은 직종까지 살짝 욕심내면, 더 많은 기회가 찾아올
+                거예요🌱
+            </p>
+        </div>
+        <div class="grid grid-cols-2 gap-1">
+            {#each jobCategorys as job, idx}
+                <label
+                    class="button-checkbox"
+                    class:disabled={occupation.length === 1 &&
                         occupation.includes(job)}
-                />
-                <div>{job}</div>
-            </label>
-        {/each}
+                    on:click={(e) => {
+                        if (
+                            occupation.length === 1 &&
+                            occupation.includes(job)
+                        ) {
+                            toastStore.set({
+                                show: true,
+                                message:
+                                    "관심직종은 최소 1개 이상 선택 되어야 합니다.",
+                                color: "#CC3D3D",
+                            });
+                        }
+                    }}
+                >
+                    <input
+                        type="checkbox"
+                        hidden
+                        value={job}
+                        bind:group={occupation}
+                        disabled={occupation.length === 1 &&
+                            occupation.includes(job)}
+                    />
+                    <div>{job}</div>
+                </label>
+            {/each}
+        </div>
+        <div class="mt-5 text-center">
+            <!-- svelte-ignore event_directive_deprecated -->
+            <button
+                class="btn btn-lg btn-success w-1/2 text-white"
+                on:click={setInterest}
+            >
+                다음
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </button>
+        </div>
     </div>
-    <div class="mt-5 text-center">
-        <!-- svelte-ignore event_directive_deprecated -->
-        <button
-            class="btn btn-lg btn-success w-1/2 text-white"
-            on:click={setInterest}
-        >
-            다음
-            <i class="fa fa-arrow-right" aria-hidden="true"></i>
-        </button>
-    </div>
-</div>
+</SsgoiTransition>
 
 <style>
     .button-checkbox div {

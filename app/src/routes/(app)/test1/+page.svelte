@@ -4,6 +4,8 @@
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
 
+    import { SsgoiTransition } from "@ssgoi/svelte";
+
     onMount(async () => {
         const tokens = new TokenManager();
 
@@ -20,13 +22,19 @@
     });
 </script>
 
-<div class="pt-20">
-    --------------------------------------
-    <button
-        on:click={() => {
-            goto("/test2");
-        }}
-    >
-        gotest2
-    </button>
-</div>
+<SsgoiTransition id="/test1">
+    <div class="pt-20">
+        --------------------------------------
+        <button
+            on:click={() => {
+                goto("/test2", {
+                    state: {
+                        testval: { name: "홍길동", age: 20 },
+                    },
+                });
+            }}
+        >
+            gotest2
+        </button>
+    </div>
+</SsgoiTransition>

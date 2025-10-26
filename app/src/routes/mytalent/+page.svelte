@@ -18,6 +18,8 @@
     import { afterNavigate, goto } from "$app/navigation";
     import axios from "axios";
 
+    import { SsgoiTransition } from "@ssgoi/svelte";
+
     let { data } = $props();
 
     console.log(data);
@@ -265,7 +267,7 @@
         <div class="mb-8">
             내 인재 정보는 마이 > 내 인재 글 관리에서 언제든 수정 가능합니다.
         </div>
-        
+
         <button
             class="btn btn-success w-1/3 text-white"
             on:click={() => {
@@ -281,239 +283,245 @@
     <PageHeader />
 {/if}
 
-<!-- svelte-ignore a11y_consider_explicit_label -->
-<!-- svelte-ignore event_directive_deprecated -->
-<div class="bg-white relative min-h-screen">
-    <div class="max-w-[530px] mx-auto suit-font pt-14 pb-24 px-4 md:px-0">
-        <div class="text-center mb-10">
-            <p>📝 프로필을 작성해 주세요.</p>
-            <p>😄 시행사 · 대행사 · 본부장 · 팀장님께서 ⚡</p>
-            <p>빠르게 연락드릴 수 있어요 🤝</p>
-        </div>
-
-        <div class="mb-6">
-            <!-- 프로필 변경 영역 -->
-            <div class="w-32 h-32 relative mx-auto">
-                <button
-                    class="absolute -bottom-2.5 -right-2.5 w-7 h-7 border-2 rounded-full bg-white text-xs text-gray-500"
-                    on:click={changeProfile}
-                >
-                    <i class="fa fa-camera" aria-hidden="true"></i>
-                </button>
-
-                <div
-                    class="w-32 h-32 border-2 border-gray-300 rounded-xl overflow-hidden flex justify-center items-center"
-                >
-                    {#if previewImg}
-                        <img src={previewImg} alt="" class="w-full h-full" />
-                    {:else if profile}
-                        <img
-                            src="{public_img_bucket}{profile}"
-                            alt=""
-                            class="w-full h-full"
-                        />
-                    {:else}
-                        <img
-                            src="/profile-base.png"
-                            alt=""
-                            class="w-full h-full"
-                        />
-                    {/if}
-                </div>
+<SsgoiTransition id="/mytalent">
+    <!-- svelte-ignore a11y_consider_explicit_label -->
+    <!-- svelte-ignore event_directive_deprecated -->
+    <div class="bg-white relative min-h-screen">
+        <div class="max-w-[530px] mx-auto suit-font pt-14 pb-24 px-4 md:px-0">
+            <div class="text-center mb-10">
+                <p>📝 프로필을 작성해 주세요.</p>
+                <p>😄 시행사 · 대행사 · 본부장 · 팀장님께서 ⚡</p>
+                <p>빠르게 연락드릴 수 있어요 🤝</p>
             </div>
 
-            {#if profileStatus}
-                <div class="mt-4 text-center">
+            <div class="mb-6">
+                <!-- 프로필 변경 영역 -->
+                <div class="w-32 h-32 relative mx-auto">
                     <button
-                        class="btn btn-warning btn-sm"
-                        value="update"
-                        on:click={updateProfile}
-                    >
-                        변경
-                    </button>
-                    <button
-                        class="btn btn-error btn-sm"
-                        value="delete"
-                        on:click={updateProfile}
-                    >
-                        취소
-                    </button>
-                </div>
-            {:else}
-                <div class="mt-4 text-center">
-                    <button
-                        class="btn btn-accent btn-sm text-white block mx-auto"
+                        class="absolute -bottom-2.5 -right-2.5 w-7 h-7 border-2 rounded-full bg-white text-xs text-gray-500"
                         on:click={changeProfile}
                     >
-                        프로필 이미지 변경
+                        <i class="fa fa-camera" aria-hidden="true"></i>
                     </button>
-                    <div class="text-xs mt-3">
-                        프로필 이미지는 300 X 300 이내 정사각형 사이즈로
-                        넣어주세요
+
+                    <div
+                        class="w-32 h-32 border-2 border-gray-300 rounded-xl overflow-hidden flex justify-center items-center"
+                    >
+                        {#if previewImg}
+                            <img
+                                src={previewImg}
+                                alt=""
+                                class="w-full h-full"
+                            />
+                        {:else if profile}
+                            <img
+                                src="{public_img_bucket}{profile}"
+                                alt=""
+                                class="w-full h-full"
+                            />
+                        {:else}
+                            <img
+                                src="/profile-base.png"
+                                alt=""
+                                class="w-full h-full"
+                            />
+                        {/if}
                     </div>
                 </div>
-            {/if}
-        </div>
 
-        <div class="mb-6">
-            <div class="mb-1">이름</div>
-            <div>
-                <input
-                    type="text"
-                    class="border w-2/3 py-2 px-3 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 text-sm"
-                    bind:value={name}
-                />
+                {#if profileStatus}
+                    <div class="mt-4 text-center">
+                        <button
+                            class="btn btn-warning btn-sm"
+                            value="update"
+                            on:click={updateProfile}
+                        >
+                            변경
+                        </button>
+                        <button
+                            class="btn btn-error btn-sm"
+                            value="delete"
+                            on:click={updateProfile}
+                        >
+                            취소
+                        </button>
+                    </div>
+                {:else}
+                    <div class="mt-4 text-center">
+                        <button
+                            class="btn btn-accent btn-sm text-white block mx-auto"
+                            on:click={changeProfile}
+                        >
+                            프로필 이미지 변경
+                        </button>
+                        <div class="text-xs mt-3">
+                            프로필 이미지는 300 X 300 이내 정사각형 사이즈로
+                            넣어주세요
+                        </div>
+                    </div>
+                {/if}
             </div>
-        </div>
 
-        <div class="mb-6">
-            <div class="mb-1">성별</div>
-            <div class="flex gap-2">
-                <label class="button-checkbox w-full">
+            <div class="mb-6">
+                <div class="mb-1">이름</div>
+                <div>
                     <input
-                        type="radio"
-                        hidden
-                        value="남자"
-                        bind:group={gender}
+                        type="text"
+                        class="border w-2/3 py-2 px-3 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 text-sm"
+                        bind:value={name}
                     />
-                    <div>남자</div>
-                </label>
+                </div>
+            </div>
 
-                <label class="button-checkbox w-full">
+            <div class="mb-6">
+                <div class="mb-1">성별</div>
+                <div class="flex gap-2">
+                    <label class="button-checkbox w-full">
+                        <input
+                            type="radio"
+                            hidden
+                            value="남자"
+                            bind:group={gender}
+                        />
+                        <div>남자</div>
+                    </label>
+
+                    <label class="button-checkbox w-full">
+                        <input
+                            type="radio"
+                            hidden
+                            value="여자"
+                            bind:group={gender}
+                        />
+                        <div>여자</div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <div class="mb-1">연령</div>
+                <div>
                     <input
-                        type="radio"
-                        hidden
-                        value="여자"
-                        bind:group={gender}
+                        type="text"
+                        class="border w-2/3 py-2 px-3 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 text-sm"
+                        bind:value={age}
                     />
-                    <div>여자</div>
-                </label>
+                </div>
+                <div class="text-gray-600 text-xs mt-1 ml-1">
+                    나이를 입력 해 주세요.
+                </div>
             </div>
-        </div>
 
-        <div class="mb-6">
-            <div class="mb-1">연령</div>
-            <div>
-                <input
-                    type="text"
-                    class="border w-2/3 py-2 px-3 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 text-sm"
-                    bind:value={age}
-                />
-            </div>
-            <div class="text-gray-600 text-xs mt-1 ml-1">
-                나이를 입력 해 주세요.
-            </div>
-        </div>
+            <div class="mb-6">
+                <div class="mb-1">경력</div>
 
-        <div class="mb-6">
-            <div class="mb-1">경력</div>
-
-            {#if careerList.length > 0}
-                <table class="w-full mb-5">
-                    <tbody>
-                        {#each careerList as val, idx}
-                            <tr>
-                                <td
-                                    class="border border-gray-300 p-2.5 text-sm"
-                                >
-                                    <div
-                                        class="flex justify-between items-center"
+                {#if careerList.length > 0}
+                    <table class="w-full mb-5">
+                        <tbody>
+                            {#each careerList as val, idx}
+                                <tr>
+                                    <td
+                                        class="border border-gray-300 p-2.5 text-sm"
                                     >
-                                        <span>{val}</span>
-                                        <button
-                                            class="cursor-pointer"
-                                            value={idx}
-                                            on:click={deleteCareerList}
+                                        <div
+                                            class="flex justify-between items-center"
                                         >
-                                            <svg
-                                                width="25px"
-                                                height="25px"
-                                                viewBox="0 0 24 24"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                ><path
-                                                    d="M19 13H6v-1h13zM12.5 2.2a10.3 10.3 0 1 0 10.3 10.3A10.299 10.299 0 0 0 12.5 2.2zm0 19.6a9.3 9.3 0 1 1 9.3-9.3 9.31 9.31 0 0 1-9.3 9.3z"
-                                                /><path
-                                                    fill="none"
-                                                    d="M0 0h24v24H0z"
-                                                /></svg
+                                            <span>{val}</span>
+                                            <button
+                                                class="cursor-pointer"
+                                                value={idx}
+                                                on:click={deleteCareerList}
                                             >
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        {/each}
-                    </tbody>
-                </table>
-            {/if}
+                                                <svg
+                                                    width="25px"
+                                                    height="25px"
+                                                    viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    ><path
+                                                        d="M19 13H6v-1h13zM12.5 2.2a10.3 10.3 0 1 0 10.3 10.3A10.299 10.299 0 0 0 12.5 2.2zm0 19.6a9.3 9.3 0 1 1 9.3-9.3 9.31 9.31 0 0 1-9.3 9.3z"
+                                                    /><path
+                                                        fill="none"
+                                                        d="M0 0h24v24H0z"
+                                                    /></svg
+                                                >
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {/each}
+                        </tbody>
+                    </table>
+                {/if}
 
-            <div class="flex items-center gap-2">
-                <input
-                    type="text"
-                    class="border w-full py-2 px-3 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 text-sm"
-                    bind:value={careerSplit}
-                    on:input={(e) => {
-                        e.target.value = e.target.value.replace(/\|/g, "");
-                    }}
-                />
+                <div class="flex items-center gap-2">
+                    <input
+                        type="text"
+                        class="border w-full py-2 px-3 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 text-sm"
+                        bind:value={careerSplit}
+                        on:input={(e) => {
+                            e.target.value = e.target.value.replace(/\|/g, "");
+                        }}
+                    />
 
-                <!-- svelte-ignore a11y_consider_explicit_label -->
-                <button
-                    class="cursor-pointer"
-                    on:click={() => {
-                        careerList.push(careerSplit);
-                        careerSplit = "";
-                    }}
-                >
-                    <svg
-                        fill="#000000"
-                        width="30px"
-                        height="30px"
-                        viewBox="0 0 32 32"
-                        version="1.1"
-                        xmlns="http://www.w3.org/2000/svg"
+                    <!-- svelte-ignore a11y_consider_explicit_label -->
+                    <button
+                        class="cursor-pointer"
+                        on:click={() => {
+                            careerList.push(careerSplit);
+                            careerSplit = "";
+                        }}
                     >
-                        <path
-                            d="M16 0c-8.836 0-16 7.163-16 16s7.163 16 16 16c8.837 0 16-7.163 16-16s-7.163-16-16-16zM16 30.032c-7.72 0-14-6.312-14-14.032s6.28-14 14-14 14 6.28 14 14-6.28 14.032-14 14.032zM23 15h-6v-6c0-0.552-0.448-1-1-1s-1 0.448-1 1v6h-6c-0.552 0-1 0.448-1 1s0.448 1 1 1h6v6c0 0.552 0.448 1 1 1s1-0.448 1-1v-6h6c0.552 0 1-0.448 1-1s-0.448-1-1-1z"
-                        ></path>
-                    </svg>
-                </button>
+                        <svg
+                            fill="#000000"
+                            width="30px"
+                            height="30px"
+                            viewBox="0 0 32 32"
+                            version="1.1"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M16 0c-8.836 0-16 7.163-16 16s7.163 16 16 16c8.837 0 16-7.163 16-16s-7.163-16-16-16zM16 30.032c-7.72 0-14-6.312-14-14.032s6.28-14 14-14 14 6.28 14 14-6.28 14.032-14 14.032zM23 15h-6v-6c0-0.552-0.448-1-1-1s-1 0.448-1 1v6h-6c-0.552 0-1 0.448-1 1s0.448 1 1 1h6v6c0 0.552 0.448 1 1 1s1-0.448 1-1v-6h6c0.552 0 1-0.448 1-1s-0.448-1-1-1z"
+                            ></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="text-gray-600 text-xs mt-1 ml-1">
+                    경력을 한줄 씩 입력 후 + 버튼을 클릭 해 주세요
+                </div>
             </div>
-            <div class="text-gray-600 text-xs mt-1 ml-1">
-                경력을 한줄 씩 입력 후 + 버튼을 클릭 해 주세요
-            </div>
-        </div>
 
-        <div class="mb-6">
-            <div class="mb-1">자기소개</div>
-            <div>
-                <textarea
-                    class="border w-full py-2 px-3 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 text-sm"
-                    rows="6"
-                    bind:value={introduction}
-                ></textarea>
+            <div class="mb-6">
+                <div class="mb-1">자기소개</div>
+                <div>
+                    <textarea
+                        class="border w-full py-2 px-3 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 text-sm"
+                        rows="6"
+                        bind:value={introduction}
+                    ></textarea>
+                </div>
             </div>
-        </div>
 
-        <div class="text-center">
-            {#if authBool}
+            <div class="text-center">
+                {#if authBool}
+                    <button
+                        class="btn btn-error w-1/3 text-white"
+                        on:click={() => {
+                            skipModal = true;
+                        }}
+                    >
+                        건너뛰기
+                    </button>
+                {/if}
                 <button
-                    class="btn btn-error w-1/3 text-white"
-                    on:click={() => {
-                        skipModal = true;
-                    }}
+                    class="btn btn-info w-1/3 text-white"
+                    on:click={uploadMyTalent}
                 >
-                    건너뛰기
+                    내 인재 정보 등록 하기
                 </button>
-            {/if}
-            <button
-                class="btn btn-info w-1/3 text-white"
-                on:click={uploadMyTalent}
-            >
-                내 인재 정보 등록 하기
-            </button>
+            </div>
         </div>
     </div>
-</div>
+</SsgoiTransition>
 
 <style>
     .button-checkbox div {
