@@ -1,5 +1,9 @@
 {
-  "appId": "com.lightbyapp.appid",
+  "appId": "co.lightbyapp.app",
   "appName": "번개분양",
-  "webDir": "build"
+  "webDir": "build",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {}
 }

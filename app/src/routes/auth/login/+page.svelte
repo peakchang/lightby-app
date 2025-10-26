@@ -7,6 +7,7 @@
     import axios from "axios";
     import { back_api } from "$lib/const";
     import { TokenManager } from "$lib/token_manager";
+    import { loginWithKakao } from "$lib/auth/kakao";
 
     let id = $state("");
     let password = $state("");
@@ -73,19 +74,19 @@
             }, random);
         } catch (err) {
             try {
-                console.error(err);
+                const m = err.response.data.message;
 
-                // const m = err.response.data.message;
-
-                // alertModal = true;
-                // alertMessage = `${m ? m : ""} 다시 시도해주세요.`;
+                alertModal = true;
+                alertMessage = `${m ? m : ""} 다시 시도해주세요.`;
             } catch (error) {
                 console.error(error.message);
             }
         }
     }
 
-    function kakao_login() {}
+    async function kakao_login() {
+        await loginWithKakao().catch(alert);
+    }
     // const kakao_login = () => {
     //     const kakaoInfo = {
     //         // kakao_restapi: "e6c8c90ba06c8dcbe1825e0785679d30",

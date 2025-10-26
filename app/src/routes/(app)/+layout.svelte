@@ -11,8 +11,10 @@
         loadingStore,
         viewLimitAlertModal,
     } from "$lib/stores/stores";
+    import axios from "axios";
+    import { back_api } from "$lib/const.js";
 
-    import { fetchRequest } from "$lib/lib";
+    import { TokenManager } from "$lib/token_manager";
 
     let { children, data } = $props();
 
@@ -36,10 +38,15 @@
         $main_location = "전국";
         sessionStorage.removeItem("location");
 
-        const res = await fetchRequest("POST", "/auth/logout", {
+        const res = await axios.post(`${back_api}/auth/logout`, {
             idx: $user_info.idx,
         });
+
         if (res.status) {
+            const tokens = new TokenManager();
+
+            await tokens.removeToken("access_token");
+            await tokens.removeToken("refresh_token");
             successMessage = "로그아웃 되었습니다.";
             successModal = true;
             setTimeout(() => {

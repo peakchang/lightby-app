@@ -16,9 +16,13 @@ export const load = async ({ params, url, data }) => {
     const accessToken = await tokens.getToken('access_token')
     const refreshToken = await tokens.getToken("refresh_token");
 
+    console.log(`accessToken : ${accessToken}`);
+    console.log(`refreshToken : ${refreshToken}`);
+    
+    
+
     let userInfo = {}
     if (accessToken) {
-
 
         try {
             // 토큰 payload 를 풀기 위해서 백엔드에 전달!
@@ -27,16 +31,11 @@ export const load = async ({ params, url, data }) => {
                     Authorization: `Bearer ${accessToken}`
                 }
             })
-
             // store 에 값 넣고 반환!
             user_info.set({ idx: res.data.userInfo.userId, rate: res.data.userInfo.rate })
-
         } catch (error) {
             console.error(error.message);
-
         }
-
-
 
     } else if (refreshToken) {
 
@@ -53,13 +52,16 @@ export const load = async ({ params, url, data }) => {
                     Authorization: `Bearer ${refreshToken}`
                 }
             })
-
+            
+            console.log(res.data);
+            
             // 새로운 액세스 토큰 및 리프레쉬 토큰 다시 저장 후 store 에 유저 정보 입력
             userInfoRow = res.data.userInfo
+            
             await tokens.setToken('access_token', res.data.newAccessToken, Date.now() + 1000 * 5)
             await tokens.setToken('refresh_token', refreshToken, Date.now() + 1000 * 60 * 60 * 24 * 14)
-            userInfo = { idx: userInfoRow.idx, rate: userInfoRow.rate };
-            user_info.set({ idx: userInfo.idx, rate: userInfo.rate })
+
+            user_info.set({ idx: userInfoRow.idx, rate: userInfoRow.rate })
 
         } catch (error) {
             await tokens.removeToken('access_token')
@@ -72,7 +74,7 @@ export const load = async ({ params, url, data }) => {
         await tokens.removeToken('refresh_token')
         user_info.set({ idx: undefined, rate: 0 })
     }
-
+    
     return {}
 
 }
