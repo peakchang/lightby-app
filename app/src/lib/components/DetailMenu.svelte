@@ -71,7 +71,7 @@
     <div
         class="text-3xl w-12 cursor-pointer"
         on:click={() => {
-            goto($prev);
+            window.history.back();
         }}
     >
         <i class="fa fa-angle-left" aria-hidden="true"></i>

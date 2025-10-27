@@ -48,15 +48,21 @@ export function getRandBet(min, max) {
 
 
 export function formatPhoneNum(phone) {
-    const clean = phone.replace(/\D/g, '');
 
-    if (clean.length == 11) {
-        return clean.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-    } else if (clean.length === 10) {
-        return clean.replace(/(\d{2,3})(\d{3,4})(\d{4})/, '$1-$2-$3');
+    if (phone) {
+        const clean = phone.replace(/\D/g, '');
+
+        if (clean.length == 11) {
+            return clean.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+        } else if (clean.length === 10) {
+            return clean.replace(/(\d{2,3})(\d{3,4})(\d{4})/, '$1-$2-$3');
+        } else {
+            return phone
+        }
     } else {
         return phone
     }
+
 }
 
 // 10일이 안지났으면 (광고 중이면) true 지났으면 (광고 끝났으면) false

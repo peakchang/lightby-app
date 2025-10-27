@@ -65,6 +65,12 @@
 				symmetric: true,
 			},
 			{
+				from: "/auth/kakao",
+				to: "/auth/interest_set",
+				transition: slide({ direction: "left" }),
+				symmetric: true,
+			},
+			{
 				from: "/auth/interest_set",
 				to: "/mytalent",
 				transition: slide({ direction: "left" }),

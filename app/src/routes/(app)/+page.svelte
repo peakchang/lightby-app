@@ -1,21 +1,24 @@
 <script>
     import { untrack } from "svelte";
-    import CustomModal from "$lib/components/CustomModal.svelte";
+
     import {
         afterNavigate,
         beforeNavigate,
         goto,
         invalidateAll,
     } from "$app/navigation";
-    import { back_api, public_img_bucket } from "$lib/const.js";
-    import PdButton from "$lib/components/PdButton.svelte";
-    import MainLocation from "$lib/components/MainLocation.svelte";
-
     import { browser } from "$app/environment";
     import { navigating, page } from "$app/stores";
     import { onDestroy, onMount } from "svelte";
+
+    import CustomModal from "$lib/components/CustomModal.svelte";
+    import PdButton from "$lib/components/PdButton.svelte";
+    import MainLocation from "$lib/components/MainLocation.svelte";
     import JobPostItem from "$lib/components/JobPostItem.svelte";
     import JobPostItemList from "$lib/components/JobPostItemList.svelte";
+
+    import { back_api, public_img_bucket } from "$lib/const.js";
+    import { raiseViewCount } from "$lib/lib";
 
     import SeoMeta from "$lib/components/SeoMeta.svelte";
 
@@ -24,15 +27,15 @@
     import DetailPage from "$lib/components/pages/DetailPage.svelte";
 
     import {
+        user_info,
         main_location,
         loadingStore,
         search_val,
         main_list,
-        prev,
-        scrollY,
-        scrollVal,
-        pageScrollStatus,
+        nonMemberViewLimitNum,
+        viewLimitAlertModal,
     } from "$lib/stores/stores.js";
+    import axios from "axios";
 
     const seoVal = {
         title: "번개분양 - 분양현장 구인/구직",
@@ -68,20 +71,8 @@
         data.baseEnv.banner_links ? data.baseEnv.banner_links.split(",") : [],
     );
 
-    // 하단 메인 메뉴 내 페이지들 끼리는 무조건 최상단에 위치! ($scrollVal 을 0으로 초기화)
-    // afterNavigate((e) => {
-    //     if (e.from && e.from.route.id.includes("(app)")) {
-    //         console.log('혹시?');
-
-    //         $scrollVal = 0; // 페이지 진입시 스크롤 위치 초기화
-    //     }
-    // });
     onMount(() => {
-        console.log($scrollVal);
-
         console.log($main_list["premium"]);
-
-        $pageScrollStatus = true; // 페이지 진입시 저장된 스크롤로 이동
 
         if (bannerList.length > 0) {
             bannerInterval = setInterval(() => {
@@ -94,10 +85,6 @@
     });
 
     $effect(() => {
-        if ($scrollY) {
-            $scrollVal = $scrollY; // 현재 스크롤 위치 저장 (페이지 벗어 날 때 까지 유지)
-        }
-
         // 추후 스크롤 내리면서 로딩 시 적용 시키기!!!
         // if (data.currentStatus == "premium") {
         //     $main_list["premium"] = data.mainList;
@@ -175,12 +162,45 @@
     //     stackNav.push("detail", { item });
     // }
 
-    function goToDetail(e) {
+    async function goToDetail(e) {
         console.log(e);
+        let getIdx = e;
 
-        const item = e;
+        // 비회원 조회수 제한!!
 
-        stackNav.push("detail", { item });
+        if (!$user_info.idx) {
+            console.log("들어옴!!");
+
+            if ($nonMemberViewLimitNum > 3) {
+                $viewLimitAlertModal = true;
+                return;
+            }
+            $nonMemberViewLimitNum = $nonMemberViewLimitNum + 1;
+            console.log($nonMemberViewLimitNum);
+        }
+
+        raiseViewCount("site", getIdx);
+
+        try {
+            const userId = $user_info.idx;
+
+            const res = await axios.post(`${back_api}/detail`, {
+                idx: getIdx,
+                userId,
+            });
+
+            console.log(res.data);
+            
+
+            const item = {
+                detail: res.data.detail,
+                favorateBool: res.data.favorateBool,
+            };
+
+            stackNav.push("detail", {item});
+        } catch (error) {
+            console.error(error.message);
+        }
     }
 </script>
 
@@ -327,10 +347,11 @@
 
     <MainLocation></MainLocation>
 
-
-    <button on:click={() => {
-        goto('/test1')
-    }}>
+    <button
+        on:click={() => {
+            goto("/test1");
+        }}
+    >
         gotest
     </button>
 
