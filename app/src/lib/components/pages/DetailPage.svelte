@@ -38,7 +38,7 @@
     let feeValue = $state("");
 
     let iframeEl;
-    const IFRAME_URL = `https://lightby.co.kr/embed_map`;
+    const IFRAME_URL = `https://lightby.co.kr/embed_map_test`;
 
     onMount(() => {
         console.log(item);
